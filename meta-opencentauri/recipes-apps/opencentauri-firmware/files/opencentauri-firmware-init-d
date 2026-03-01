@@ -1,0 +1,36 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          opencentauri-firmware
+# Required-Start:    $local_fs $remote_fs $network
+# Required-Stop:     $local_fs $remote_fs $network
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start OpenCentauri firmware
+### END INIT INFO
+
+REMOTEPROCFILE="/sys/class/remoteproc/remoteproc0/state"
+
+case "$1" in
+    start)
+        echo "Starting opencentauri-firmware..."
+        echo start > $REMOTEPROCFILE
+        ;;
+    stop)
+        echo "Stopping opencentauri-firmware..."
+        echo stop > $REMOTEPROCFILE
+        ;;
+    restart|force-reload)
+        $0 stop
+        sleep 1
+        $0 start
+        ;;
+    status)
+        echo "opencentauri-firmware is $(cat $REMOTEPROCFILE)"
+        ;;
+    *)
+        echo "Usage: $0 {start|stop|restart|status}"
+        exit 1
+        ;;
+esac
+
+exit 0

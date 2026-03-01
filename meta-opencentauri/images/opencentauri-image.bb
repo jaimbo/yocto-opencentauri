@@ -1,5 +1,5 @@
 DESCRIPTION = "OpenCentauri Image"
-LICENSE = "MIT"
+LICENSE = "GPL-3.0-only"
 
 IMAGE_INSTALL = "packagegroup-core-boot ${CORE_IMAGE_EXTRA_INSTALL}"
 
@@ -27,4 +27,6 @@ CORE_IMAGE_EXTRA_INSTALL += "\
     i2c-tools \
     nano \
     devmem2 \
+    mjpg-streamer \
+    opencentauri-firmware \
 "

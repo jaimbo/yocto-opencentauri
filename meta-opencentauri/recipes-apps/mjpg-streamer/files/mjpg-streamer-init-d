@@ -1,6 +1,6 @@
 #!/bin/sh
 ### BEGIN INIT INFO
-# Provides:          klipper
+# Provides:          mjpg-streamer
 # Required-Start:    $local_fs $remote_fs $network opencentauri-firmware
 # Required-Stop:     $local_fs $remote_fs $network
 # Default-Start:     2 3 4 5
@@ -8,18 +8,18 @@
 # Short-Description: Klipper 3D Printer Firmware
 ### END INIT INFO
 
-KLIPPY_EXEC="/usr/bin/python3"
-KLIPPY_ARGS="/usr/share/klipper/klippy/klippy.py /printer_data/config/printer.cfg -l /var/log/klippy.log -a /tmp/klippy_uds"
-PIDFILE="/var/run/klipper.pid"
+MJPEG_EXEC="/usr/bin/mjpg_streamer"
+MJPEG_ARGS="-i \"input_uvc.so -d /dev/video0 -r 1280x720 -f 30\" -o \"output_http.so -p 8080\""
+PIDFILE="/var/run/mjpg-streamer.pid"
 
 case "$1" in
     start)
-        echo "Starting klipper..."
+        echo "Starting mjpg-streamer..."
         start-stop-daemon -S -b -m -p $PIDFILE \
-            -x $KLIPPY_EXEC -- $KLIPPY_ARGS
+            -x $MJPEG_EXEC -- $MJPEG_ARGS
         ;;
     stop)
-        echo "Stopping klipper..."
+        echo "Stopping mjpg-streamer..."
         start-stop-daemon -K -p $PIDFILE -R 10
         rm -f $PIDFILE
         ;;
@@ -30,9 +30,9 @@ case "$1" in
         ;;
     status)
         if [ -f $PIDFILE ] && kill -0 $(cat $PIDFILE) 2>/dev/null; then
-            echo "klipper is running (PID $(cat $PIDFILE))"
+            echo "mjpg-streamer is running (PID $(cat $PIDFILE))"
         else
-            echo "klipper is not running"
+            echo "mjpg-streamer is not running"
             exit 1
         fi
         ;;

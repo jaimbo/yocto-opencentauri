@@ -6,10 +6,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=1ebbd3e34237af26da5dc08a4e440464"
 
 FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 
-SRC_URI = "git://github.com/KalicoCrew/kalico.git;protocol=https;branch=main \
+SRC_URI = "git://github.com/OpenCentauri/kalico.git;protocol=https;branch=open-centauri \
     file://klipper-init-d \
     file://printer.cfg"
-SRCREV = "c70d21abd88757a6653f5081a125ea26be13c2be"
+SRCREV = "415633afd9c1fac96bbb26c43865e8e600b6b8ae"
 
 S = "${WORKDIR}/git"
 
@@ -76,8 +76,9 @@ do_install() {
     find ${D} -name '__pycache__' -type d -exec rm -rf {} + 2>/dev/null || true
 
     # Config directory
-    install -d ${D}${sysconfdir}/klipper
-    cp ${WORKDIR}/printer.cfg ${D}${sysconfdir}/klipper
+    install -d ${D}/printer_data
+    install -d ${D}/printer_data/config
+    cp ${WORKDIR}/printer.cfg ${D}/printer_data/config
 
     # Install SysVinit script
     install -d ${D}${sysconfdir}/init.d
@@ -88,7 +89,7 @@ do_install() {
 FILES:${PN} = " \
     ${datadir}/klipper \
     ${sysconfdir}/init.d/klipper \
-    ${sysconfdir}/klipper \
+    /printer_data/config/printer.cfg \
 "
 
-CONFFILES:${PN} = "${sysconfdir}/klipper/printer.cfg"
+CONFFILES:${PN} = "/printer_data/config/printer.cfg"

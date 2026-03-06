@@ -29,3 +29,5 @@ CORE_IMAGE_EXTRA_INSTALL += "\
     devmem2 \
     mjpg-streamer \
 "
+
+WKS_FILE = "opencentauri-usb-image.wks"

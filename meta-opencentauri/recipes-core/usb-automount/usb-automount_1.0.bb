@@ -1,0 +1,24 @@
+DESCRIPTION = "USB storage auto-mount via udev"
+LICENSE = "GPL-3.0-only"
+LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/GPL-3.0-only;md5=c79ff39f19dfec6d293b95dea7b07891"
+
+SRC_URI = "\
+    file://99-usb-automount.rules \
+    file://usb-mount.sh \
+"
+
+RDEPENDS:${PN} = "udev"
+
+do_install() {
+    install -d ${D}${sysconfdir}/udev/rules.d
+    install -m 0644 ${WORKDIR}/99-usb-automount.rules \
+        ${D}${sysconfdir}/udev/rules.d/99-usb-automount.rules
+
+    install -d ${D}${bindir}
+    install -m 0755 ${WORKDIR}/usb-mount.sh ${D}${bindir}/usb-mount.sh
+}
+
+FILES:${PN} = "\
+    ${sysconfdir}/udev/rules.d/99-usb-automount.rules \
+    ${bindir}/usb-mount.sh \
+"

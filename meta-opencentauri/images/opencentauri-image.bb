@@ -33,6 +33,9 @@ CORE_IMAGE_EXTRA_INSTALL += "\
     mjpg-streamer \
     swupdate \
     u-boot-fw-utils \
+    zram \
+    zram-emmc-swap \
+    usb-automount \
 "
 
 WKS_FILES = "opencentauri-usb-image.wks.in"

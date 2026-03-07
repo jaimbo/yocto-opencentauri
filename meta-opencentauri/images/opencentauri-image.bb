@@ -3,13 +3,16 @@ LICENSE = "GPL-3.0-only"
 
 IMAGE_INSTALL = "packagegroup-core-boot ${CORE_IMAGE_EXTRA_INSTALL}"
 
+IMAGE_FSTYPES += "wic squashfs"
+
 IMAGE_LINGUAS = " "
 
-inherit core-image
+inherit core-image extract-partition
 
 IMAGE_FEATURES += "\
     ssh-server-dropbear \
     package-management \
+    read-only-rootfs \
 "
 
 CORE_IMAGE_EXTRA_INSTALL += "\
@@ -28,6 +31,15 @@ CORE_IMAGE_EXTRA_INSTALL += "\
     nano \
     devmem2 \
     mjpg-streamer \
+    swupdate \
+    u-boot-fw-utils \
 "
 
-WKS_FILE = "opencentauri-usb-image.wks"
+WKS_FILES = "opencentauri-usb-image.wks.in"
+WKS_FILE_DEPENDS += "squashfs-tools-native"
+
+EXTRACT_PARTITION_LABEL = "boot"
+
+INITRAMFS_IMAGE = "core-image-tiny-initramfs"
+INITRAMFS_FSTYPES = "cpio.gz"
+INITRAMFS_IMAGE_BUNDLE = "1"

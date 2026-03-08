@@ -62,13 +62,6 @@ do_install() {
     install -d ${D}${datadir}/moonraker
     cp -r ${S}/moonraker ${D}${datadir}/moonraker/
 
-    # Printer data directories
-    install -d ${D}/var/lib/moonraker
-    install -d ${D}/var/lib/moonraker/printer_data
-    install -d ${D}/var/lib/moonraker/printer_data/config
-    install -d ${D}/var/lib/moonraker/printer_data/gcodes
-    install -d ${D}/var/lib/moonraker/printer_data/comms
-
     # Install default moonraker config
     install -d ${D}${sysconfdir}/moonraker
     cp ${WORKDIR}/moonraker.conf ${D}${sysconfdir}/moonraker
@@ -83,7 +76,6 @@ FILES:${PN} = " \
     ${datadir}/moonraker \
     ${sysconfdir}/init.d/moonraker \
     ${sysconfdir}/moonraker \
-    /var/lib/moonraker \
 "
 
 CONFFILES:${PN} = "${sysconfdir}/moonraker/moonraker.conf"

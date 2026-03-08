@@ -7,7 +7,9 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 
 SRC_URI += " \
     file://klipper-init-d \
-    file://printer.cfg"
+    file://printer.cfg \
+    file://macros.cfg \
+"
 
 inherit python3-dir update-rc.d
 
@@ -24,6 +26,7 @@ RDEPENDS:${PN} = " \
     kalico-firmware-dsp \
     kalico-firmware-toolhead \
     kalico-firmware-bed \
+    klipper-config \
 "
 
 RPROVIDES:${PN} += "klipper"
@@ -70,10 +73,10 @@ do_install() {
     find ${D} -name '*.pyc' -delete
     find ${D} -name '__pycache__' -type d -exec rm -rf {} + 2>/dev/null || true
 
-    # Config directory
-    install -d ${D}/printer_data
-    install -d ${D}/printer_data/config
-    cp ${WORKDIR}/printer.cfg ${D}/printer_data/config
+    # Install default kalico config
+    install -d ${D}${sysconfdir}/klipper
+    cp ${WORKDIR}/printer.cfg ${D}${sysconfdir}/klipper
+    cp ${WORKDIR}/macros.cfg ${D}${sysconfdir}/klipper
 
     # Install SysVinit script
     install -d ${D}${sysconfdir}/init.d
@@ -84,7 +87,7 @@ do_install() {
 FILES:${PN} = " \
     ${datadir}/klipper \
     ${sysconfdir}/init.d/klipper \
-    /printer_data/config/printer.cfg \
+    ${sysconfdir}/klipper \
 "
 
-CONFFILES:${PN} = "/printer_data/config/printer.cfg"
+CONFFILES:${PN} = "${sysconfdir}/klipper/printer.cfg"

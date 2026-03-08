@@ -8,7 +8,9 @@ LIC_FILES_CHKSUM = "file://index.html;md5=cda929aa8b78d319a89b240b5df815f9"
 FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 
 SRC_URI = "https://github.com/mainsail-crew/mainsail/releases/download/v${PV}/mainsail.zip;subdir=mainsail \
-    file://mainsail-nginx"
+    file://mainsail-nginx \
+    file://mainsail.cfg \
+"
 SRC_URI[sha256sum] = "d010f4df25557d520ccdbb8e42fc381df2288e6a5c72d3838a5a2433c7a31d4e"
 
 S = "${WORKDIR}/mainsail"
@@ -40,12 +42,20 @@ do_install() {
     # Symlink to sites-enabled
     ln -sf ${sysconfdir}/nginx/sites-available/mainsail \
         ${D}${sysconfdir}/nginx/sites-enabled/mainsail
+
+    # Install default mainsail config
+    install -d ${D}${sysconfdir}/mainsail
+    cp ${WORKDIR}/mainsail.cfg ${D}${sysconfdir}/mainsail
 }
 
 FILES:${PN} = " \
     /var/www/mainsail \
     ${sysconfdir}/nginx/sites-available/mainsail \
     ${sysconfdir}/nginx/sites-enabled/mainsail \
+    ${sysconfdir}/mainsail/mainsail.cfg \
 "
 
-CONFFILES:${PN} = "${sysconfdir}/nginx/sites-available/mainsail"
+CONFFILES:${PN} = " \
+    ${sysconfdir}/nginx/sites-available/mainsail \
+    ${sysconfdir}/mainsail/mainsail.cfg \
+"

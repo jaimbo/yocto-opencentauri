@@ -1,0 +1,54 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          klipper-config
+# Required-Start:    $local_fs
+# Required-Stop:     $local_fs
+# Default-Start:     S
+# Default-Stop:
+# Short-Description: Setup printer_data directory and bind mount
+### END INIT INFO
+
+WRITABLE=/mnt/writable
+PRINTER_DATA=$WRITABLE/printer_data
+MOUNTPOINT=/printer_data
+
+case "$1" in
+    start)
+        # Wait for /mnt/writable to be mounted
+        if ! mountpoint -q $WRITABLE; then
+            echo "klipper-config: $WRITABLE not mounted, skipping"
+            exit 0
+        fi
+
+        # Create directory on persistent partition if first boot
+        # and then populate with default configs
+        if [ ! -d $PRINTER_DATA ]; then
+            echo "klipper-config: First boot, creating $PRINTER_DATA"
+            mkdir -p $PRINTER_DATA/config
+            cp /etc/klipper/printer.cfg $PRINTER_DATA/config
+            cp /etc/klipper/macros.cfg $PRINTER_DATA/config
+            cp /etc/moonraker/moonraker.conf $PRINTER_DATA/config
+            cp /etc/mainsail/mainsail.cfg $PRINTER_DATA/config
+        fi
+
+        # Create mountpoint if it doesn't exist
+        mkdir -p $MOUNTPOINT
+
+        # Bind mount if not already mounted
+        if ! mountpoint -q $MOUNTPOINT; then
+            mount --bind $PRINTER_DATA $MOUNTPOINT
+            echo "klipper-config: Mounted $PRINTER_DATA -> $MOUNTPOINT"
+        fi
+        ;;
+    stop)
+        if mountpoint -q $MOUNTPOINT; then
+            umount $MOUNTPOINT
+        fi
+        ;;
+    *)
+        echo "Usage: $0 {start|stop}"
+        exit 1
+        ;;
+esac
+
+exit 0

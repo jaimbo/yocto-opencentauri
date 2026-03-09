@@ -1,0 +1,14 @@
+{
+    "default_printer": "printer",
+    "log_path": "/printer_data/logs/guppyscreen.log",
+    "printers": {
+        "printer": {
+            "display_sleep_sec": 300,
+            "moonraker_api_key": false,
+            "moonraker_host": "127.0.0.1",
+            "moonraker_port": 7125
+        }
+    },
+    "thumbnail_path": "/printer_data/thumbnails",
+    "wpa_supplicant": "/mnt/writable/wpa_supplicant.conf"
+}

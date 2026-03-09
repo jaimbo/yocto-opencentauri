@@ -29,6 +29,7 @@ case "$1" in
             cp /etc/klipper/macros.cfg $PRINTER_DATA/config
             cp /etc/moonraker/moonraker.conf $PRINTER_DATA/config
             cp /etc/mainsail/mainsail.cfg $PRINTER_DATA/config
+            cp /etc/guppyscreen/guppyconfig.json $PRINTER_DATA/config
         fi
 
         # Create mountpoint if it doesn't exist

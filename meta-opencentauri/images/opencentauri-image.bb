@@ -26,6 +26,7 @@ CORE_IMAGE_EXTRA_INSTALL += "\
     kalico \
     moonraker \
     mainsail \
+    guppyscreen \
     htop \
     i2c-tools \
     nano \

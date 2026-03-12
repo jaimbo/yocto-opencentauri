@@ -5,7 +5,10 @@ SRC_URI += " \
     file://hwrevision \
     file://swupdate_public.pem \
     file://swupdate.cfg \
+    file://0001-swupdate-add-awboot-handler.patch \
 "
+DEPENDS += "allwinner-ota-burnboot"
+RDEPENDS:${PN} += "allwinner-ota-burnboot"
 
 do_install:append() {
     install -d ${D}${sysconfdir}

@@ -40,6 +40,9 @@ case "$1" in
             mount --bind $PRINTER_DATA $MOUNTPOINT
             echo "klipper-config: Mounted $PRINTER_DATA -> $MOUNTPOINT"
         fi
+
+        # Set up /dev/by-name dir which swupdate expects to have
+        ln -s /dev/disk/by-partlabel /dev/by-name
         ;;
     stop)
         if mountpoint -q $MOUNTPOINT; then

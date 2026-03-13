@@ -4,7 +4,8 @@ LICENSE = "GPL-2.0-or-later"
 LIC_FILES_CHKSUM = "file://BootHead.h;beginline=1;endline=19;md5=e9660d58c5efc3682f53a4fd8fc43608"
 
 SRC_URI = "git://github.com/jamesturton/allwinner-ota-burnboot.git;protocol=https;branch=main"
-SRCREV = "9dec9cbf2c9f352ade616ec4d4249dcb845766c0"
+SRCREV = "abb7920b78ce6616cef9e4bf8fce32d8edcdd45f"
+PR = "r1"
 
 S = "${WORKDIR}/git"
 

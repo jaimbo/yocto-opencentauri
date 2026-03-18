@@ -15,6 +15,17 @@ INSTALLED_VERSION="/etc/bed.ver"
 SERIALPORT="/dev/ttyS4"
 GPIO="201"
 
+update(){
+    flashtool -d $SERIALPORT -b 115200 -r
+    if flashtool -d $SERIALPORT -f $FIRMWARE -b 115200; then
+        cp $FIRMWARE_VERSION $INSTALLED_VERSION
+        echo "Firmware flashed and version recorded."
+    else
+        echo "Firmware flash failed, version not updated."
+        return 1
+    fi
+}
+
 case "$1" in
     start)
         echo "Starting klipper-firmware-bed..."
@@ -24,25 +35,24 @@ case "$1" in
         echo $GPIO > /sys/class/gpio/unexport
         sleep 1
 
-        echo "Attempting bootloader upgrade..."
-        if mcu-flasher --firmware $KATAPULT_DEPLOYER --no-wait $SERIALPORT --firmware-version 6.4.9; then
-            echo "Bootloader deployer flashed successfully, clearing installed version."
-            rm -f $INSTALLED_VERSION
-        else
-            echo "Bootloader already up to date."
-        fi
-
-        if [ ! -f "$INSTALLED_VERSION" ] || [ "$(cat $INSTALLED_VERSION)" != "$(cat $FIRMWARE_VERSION)" ]; then
-            echo "Firmware version mismatch or not installed, flashing firmware..."
-            flashtool -d $SERIALPORT -b 115200 -r
-            if flashtool -d $SERIALPORT -f $FIRMWARE -b 115200; then
-                cp $FIRMWARE_VERSION $INSTALLED_VERSION
-                echo "Firmware flashed and version recorded."
-            else
-                echo "Firmware flash failed, version not updated."
-            fi
-        else
+        if [ -f "$INSTALLED_VERSION" ] && [ "$(cat $INSTALLED_VERSION)" == "$(cat $FIRMWARE_VERSION)" ]; then
             echo "Firmware is already up to date."
+            exit 0
+        else
+            echo "Firmware version mismatch or not installed, flashing firmware..."
+            if update; then
+                exit 0
+            else
+                echo "Attempting bootloader upgrade..."
+                if mcu-flasher --firmware $KATAPULT_DEPLOYER --no-wait $SERIALPORT --firmware-version 6.4.9; then
+                    echo "Bootloader deployer flashed successfully, clearing installed version."
+                    rm -f $INSTALLED_VERSION
+                    sleep 1
+                    update
+                else
+                    echo "Cannot update bootloader."
+                fi
+            fi
         fi
         ;;
     stop)

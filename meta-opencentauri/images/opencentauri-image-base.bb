@@ -34,6 +34,7 @@ CORE_IMAGE_EXTRA_INSTALL += "\
     zram \
     zram-emmc-swap \
     usb-automount \
+    dev-by-id \
     psplash \
     opencentauri-bootlogos \
 "

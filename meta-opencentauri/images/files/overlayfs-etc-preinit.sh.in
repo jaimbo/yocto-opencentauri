@@ -33,6 +33,13 @@ if mount -n -t {OVERLAYFS_ETC_FSTYPE} \
     -o {OVERLAYFS_ETC_MOUNT_OPTIONS} \
     {OVERLAYFS_ETC_DEVICE} {OVERLAYFS_ETC_MOUNT_POINT}
 then
+    # Factory reset check — wipe overlay if trigger file exists
+    if [ -f {OVERLAYFS_ETC_MOUNT_POINT}/.factory-reset ]; then
+        rm -rf $UPPER_DIR
+        rm -rf $WORK_DIR
+        rm -f {OVERLAYFS_ETC_MOUNT_POINT}/.factory-reset
+    fi
+
     mkdir -p $UPPER_DIR
     mkdir -p $WORK_DIR
 

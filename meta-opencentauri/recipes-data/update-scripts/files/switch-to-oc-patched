@@ -14,6 +14,13 @@ STOCK_FW_TOOLHEAD="/lib/firmware/katapult-deployer-stock-toolhead.bin"
 # Download firmware
 curl -k -f -S -o "$SWUFILE" -L "$FW_URL"
 
+# Check file exists and is not empty, clean up and exit if not
+if [ ! -s "$SWUFILE" ]; then
+    echo "Failed to download update.swu - Aborting."
+    rm -f "$SWUFILE"
+    exit 1
+fi
+
 # Install firmware
 flash "$SWUFILE"
 
